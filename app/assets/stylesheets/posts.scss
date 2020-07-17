@@ -23,3 +23,18 @@
   padding: 15px;
   border: 1px solid #ddd;
 }
+
+.post-actions{
+  margin-bottom: 20px;
+  i{
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  i:hover{
+    color: #bbb;
+  }
+  i.active{
+    color: greenyellow;
+  }
+  
+}

@@ -3,14 +3,22 @@
     <div class='col-md-8'>
       <% @posts.each do |post| %>
         <div class='insta-post'>
+          
           <div class='post-meta'>
             <%= link_to image_tag(current_account.image.thumb.url, class: "img-circle"), profile_path(post.account.username) %>
             <%= link_to post.account.username, profile_path(post.account.username), class: "text-dark" %>
           </div>
+          
           <%= image_tag post.image.url, class: 'img img-fluid' %>
+          
           <div class="post-details">
-            <p><strong><%= post.total_likes %> likes</strong></p>
-            <p><strong><%= link_to post.account.username, profile_path(post.account.username), class: "text-dark" %></strong></p>
+            <div class="post-actions">
+              <i class="fa fa-heart fa-2x post-like like-<%= post.id %> <%= "active" if post_liked_by_user?(post.id) %>" data-id="<%= post.id %>"></i>
+              <i class="fa fa-comment fa-2x post-comment"></i>
+            </div>
+
+            <p><strong id="post-<%= post.id %>-likes"><%= post.total_likes_count %> likes</strong></p>
+            <p><strong id="post-<%= post.id %>-comments"><%= link_to post.account.username, profile_path(post.account.username), class: "text-dark" %></strong></p>
             <%= simple_format post.description %>
             <p class="text-muted"><%= time_ago_in_words post.created_at %> ago</p>
           </div>
@@ -30,6 +38,7 @@
       <div class="follower-suggestions">
         <%= link_to "View All", "#", class: "float-right text-dark" %>
         <p class="text-muted">Suggestions for you</p>
+        <%= render "follower_suggestions" %>
       </div>
     </div>
   </div>

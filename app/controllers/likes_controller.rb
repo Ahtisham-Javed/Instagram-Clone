@@ -1,24 +1,24 @@
 class LikesController < ApplicationController
-
-  def new
-    @post = Post.new
-  end
+  before_action :authenticate_account!
 
   def create
-    @post = current_account.posts.build(post_params)
-    if @post.save
-      redirect_to dashboard_path, notice: "Post created successfully"
-    else
-      render 'new', notice: "Unable to create post"
+    @like = current_account.likes.build()
+    @like.post_id = params[:post_id]
+    @post_id = params[:post_id]
+    existing_like = Like.where(post_id: params[:post_id], account_id: current_account.id)
+    respond_to do |format|
+      format.js {
+        if existing_like.any?
+          @success = false
+          existing_like.first.destroy
+        elsif @like.save
+          @success = true
+        else
+          @success = false
+        end
+        @post_likes = Post.find(@post_id).total_likes_count
+        render "like"
+      }
     end
   end
-
-  def show
-  end
-
-  private
-
-    def post_params
-      params.require(:post).permit(:description, :image, :image_cache)
-    end
 end
